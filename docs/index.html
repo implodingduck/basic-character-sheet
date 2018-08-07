@@ -18,10 +18,10 @@
       </span>
     </div>
     <div v-for="(val, attr, index) in character.attrs">
-      <label>{{upperFirst(attr)}}: <input type="text" v-model="val" /></label> + {{attrMod(val)}}
+      <label>{{upperFirst(attr)}}: <input type="text" v-model="character.attrs[attr]" ></label> + {{attrMod(val)}}
     </div>
     <div v-for="(val, save, index) in character.saves">
-      <label>{{upperFirst(save)}}: {{calculateVal(val)}}  </label>
+      <calcabledisplay :name="save" :attrs="character.attrs" v-model="character.saves[save]"></calcabledisplay>
     </div>
   </div>
   <div><b>Init</b> {{calculateVal(character.init)}}
@@ -32,6 +32,41 @@
 
 
 <script type="text/javascript">
+
+const calcableDisplay = Vue.component('calcabledisplay', {
+  props: ['name', 'value', 'attrs'],
+  computed: {
+    total: function(){
+      return this.calculateVal(this.value);
+    }
+  },
+  methods: {
+    calculateVal: function(obj){
+      let sum = 0
+      for(const key in obj){
+        if(key == 'stat'){
+          let statNum = this.attrMod(this.attrs[obj[key]])
+          sum += statNum;
+        }else{
+          sum += Number.parseInt(obj[key])
+        }
+      }
+      return sum;
+    },
+    attrMod: function(attr){
+      return Math.floor( (attr/2) ) - 5
+    },
+    showStatMod: function(val){
+      if( this.attrs[val] ) {
+        return this.attrMod(this.attrs[val])
+      }
+      return val;
+    }
+  },
+  template: `<span>
+    <label>{{name}}: {{total}} = <span v-for="(val, key, index) in value"> <i v-if="index > 0">+</i> {{showStatMod(val)}} ( <span v-if="key == 'stat'">{{val}}</span> <span v-if="key != 'stat'">{{key}}</span>) </span></label>
+  </span>`
+})
 
 const linkable = Vue.component('linkable', {
   props: ['value'],

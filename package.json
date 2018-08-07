@@ -1,0 +1,22 @@
+{
+  "name": "basic-character-sheet",
+  "version": "1.0.0",
+  "description": "Basic character sheet for RPGs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/implodingduck/basic-character-sheet.git"
+  },
+  "author": "implodingduck",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/implodingduck/basic-character-sheet/issues"
+  },
+  "homepage": "https://github.com/implodingduck/basic-character-sheet#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

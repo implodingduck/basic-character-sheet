@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Basic Character Sheet</title>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
+</head>
+
+<body>
+
+<div id="app">
+  <div>
+    <div v-for="(val, attr, index) in character.attrs">
+      {{upperFirst(attr)}}: {{val}}
+    </div>
+  </div>
+
+   <hr>
+  {{ character }}
+</div>
+
+
+<script type="text/javascript">
+const app = new Vue({
+  el: '#app',
+  data: {
+    character: {}
+  },
+  created: function(){
+    let $vm = this;
+    axios.get('characters/TK.json').then(function(response){
+      $vm.character = response.data
+    })
+  },
+  methods: {
+    upperFirst: function(str){
+      return str.charAt(0).toUpperCase() + str.substr(1)
+    }
+  }
+})
+</script>
+
+</body>
+
+</html>
+

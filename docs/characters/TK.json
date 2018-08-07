@@ -1,4 +1,10 @@
 {
+  "info": {
+    "name": "TK",
+    "race": "Human (Varisian)|https://www.d20pfsrd.com/races/core-races/human/",
+    "level": 1,
+    "class": "Kineticist|https://www.d20pfsrd.com/occult-adventures/occult-classes/kineticist/"
+  },
   "attrs": {
     "str": 8,
     "dex": 18,
@@ -6,5 +12,29 @@
     "int": 10,
     "wis": 12,
     "cha": 8
+  },
+  "init": {
+    "stat": "dex",
+    "misc": 0
+  },
+  "saves": {
+    "fort": {
+      "stat": "con",
+      "base": 2,
+      "enh": 0,
+      "misc": 0
+    },
+    "ref": {
+      "stat": "dex",
+      "base": 2,
+      "enh": 0,
+      "misc": 0
+    },
+    "will": {
+      "stat": "wis",
+      "base": 0,
+      "enh": 0,
+      "misc": 0
+    }
   }
 }

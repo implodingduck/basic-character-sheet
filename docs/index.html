@@ -12,10 +12,19 @@
 
 <div id="app">
   <div>
+    <div>
+      <span v-for="(val, infoName, index) in character.info">
+        <b>{{upperFirst(infoName)}}</b>: <linkable v-model="val"></linkable>&nbsp;
+      </span>
+    </div>
     <div v-for="(val, attr, index) in character.attrs">
-      {{upperFirst(attr)}}: {{val}}
+      <label>{{upperFirst(attr)}}: <input type="text" v-model="val" /></label> + {{attrMod(val)}}
+    </div>
+    <div v-for="(val, save, index) in character.saves">
+      <label>{{upperFirst(save)}}: {{calculateVal(val)}}  </label>
     </div>
   </div>
+  <div><b>Init</b> {{calculateVal(character.init)}}
 
    <hr>
   {{ character }}
@@ -23,6 +32,31 @@
 
 
 <script type="text/javascript">
+
+const linkable = Vue.component('linkable', {
+  props: ['value'],
+  computed: {
+    title: function(){
+      let newString = String(this.value);
+      let splitStr = newString.split('|');
+      return splitStr[0];
+    },
+    link: function(){
+      let retVal;
+      let newString = String(this.value);
+      let splitStr = newString.split('|');
+      if (splitStr.length > 1 && splitStr[1].indexOf('http') > -1){
+        retVal = splitStr[1]
+      }
+      return retVal;
+    }
+  },
+  template: `<span>
+  <a v-if="link" :href="link">{{title}}</a>
+  <span v-if="!link">{{title}}</span>
+  </span>`
+})
+
 const app = new Vue({
   el: '#app',
   data: {
@@ -37,6 +71,21 @@ const app = new Vue({
   methods: {
     upperFirst: function(str){
       return str.charAt(0).toUpperCase() + str.substr(1)
+    },
+    calculateVal: function(obj) {
+      let sum = 0
+      for(const key in obj){
+        if(key == 'stat'){
+          let statNum = this.attrMod(this.character.attrs[obj[key]])
+          sum += statNum;
+        }else{
+          sum += Number.parseInt(obj[key])
+        }
+      }
+      return sum;
+    },
+    attrMod: function(attr){
+      return Math.floor( (attr/2) ) - 5
     }
   }
 })

@@ -20,18 +20,39 @@
     <div v-for="(val, attr, index) in character.attrs">
       <label>{{upperFirst(attr)}}: <input type="text" v-model="character.attrs[attr]" ></label> + {{attrMod(val)}}
     </div>
+    
+  </div>
+  <div>
+    <calcabledisplay :name="'Init'" :attrs="character.attrs" v-model="character.init"></calcabledisplay>
+  </div> 
+  <div>
+    <h4>Attacks</h4>
+    <label>Base Attack Bonus: <input type="text" v-model="character.offense.bab" ></label>
+    <ul>
+      <li>Melee: {{parseInt(character.offense.bab) + attrMod(character.attrs.str)}}  = {{character.offense.bab}} (bab) + {{attrMod(character.attrs.str)}} (str)</li>
+      <li>Ranged: {{parseInt(character.offense.bab) + attrMod(character.attrs.dex)}} = {{character.offense.bab}} (bab) + {{attrMod(character.attrs.dex)}} (dex)</li>
+      <li>CMB: {{parseInt(character.offense.bab) + attrMod(character.attrs.str) + parseInt(character.offense.size)}}  = {{character.offense.bab}} (bab) + {{attrMod(character.attrs.str)}} (str) + {{character.offense.size}} (size)
+    </ul>
+  </div>
+  <div>
+    <h4>Defense</h4>
+    <ul>
+      <li>AC</li>
+      <li>Touch AC</li>
+      <li>CMD</li>
+    </ul>
     <div v-for="(val, save, index) in character.saves">
       <calcabledisplay :name="save" :attrs="character.attrs" v-model="character.saves[save]"></calcabledisplay>
     </div>
   </div>
-  <div><b>Init</b> {{calculateVal(character.init)}}
-
-   <hr>
+  <hr>
   {{ character }}
 </div>
 
 
 <script type="text/javascript">
+
+
 
 const calcableDisplay = Vue.component('calcabledisplay', {
   props: ['name', 'value', 'attrs'],

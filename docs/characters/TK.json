@@ -17,6 +17,17 @@
     "stat": "dex",
     "misc": 0
   },
+  "offense": {
+    "bab": 0,
+    "size": 0
+  },
+  "defense": {
+    "base": 10,
+    "stat": "dex",
+    "armor": 0,
+    "enh": 0,
+    "misc": 0
+  },
   "saves": {
     "fort": {
       "stat": "con",

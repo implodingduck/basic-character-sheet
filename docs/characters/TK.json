@@ -14,35 +14,50 @@
     "cha": 8
   },
   "init": {
-    "stat": "dex",
+    "dex": "$attrs.dex",
     "misc": 0
   },
   "offense": {
     "bab": 0,
     "size": 0
   },
+  "attacks": {
+    "melee": {
+      "str": "$attrs.str",
+      "bab": "$offense.bab"
+    },
+    "ranged": {
+      "dex": "$attrs.dex",
+      "bab": "$offense.bab"
+    },
+    "cmb": {
+      "bab": "$offense.bab",
+      "str": "$attrs.str",
+      "size": "$offense.size"
+    }
+  },
   "defense": {
     "base": 10,
-    "stat": "dex",
+    "dex": "$attrs.dex",
     "armor": 0,
     "enh": 0,
     "misc": 0
   },
   "saves": {
     "fort": {
-      "stat": "con",
+      "con": "$attrs.con",
       "base": 2,
       "enh": 0,
       "misc": 0
     },
     "ref": {
-      "stat": "dex",
+      "dex": "$attrs.dex",
       "base": 2,
       "enh": 0,
       "misc": 0
     },
     "will": {
-      "stat": "wis",
+      "wis": "$attrs.wis",
       "base": 0,
       "enh": 0,
       "misc": 0

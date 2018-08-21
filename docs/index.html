@@ -23,16 +23,21 @@
     
   </div>
   <div>
-    <calcabledisplay :name="'Init'" :attrs="character.attrs" v-model="character.init"></calcabledisplay>
+    <calcabledisplay :name="'Init'" :character="character" v-model="character.init"></calcabledisplay>
   </div> 
   <div>
     <h4>Attacks</h4>
-    <label>Base Attack Bonus: <input type="text" v-model="character.offense.bab" ></label>
-    <ul>
-      <li>Melee: {{parseInt(character.offense.bab) + attrMod(character.attrs.str)}}  = {{character.offense.bab}} (bab) + {{attrMod(character.attrs.str)}} (str)</li>
-      <li>Ranged: {{parseInt(character.offense.bab) + attrMod(character.attrs.dex)}} = {{character.offense.bab}} (bab) + {{attrMod(character.attrs.dex)}} (dex)</li>
-      <li>CMB: {{parseInt(character.offense.bab) + attrMod(character.attrs.str) + parseInt(character.offense.size)}}  = {{character.offense.bab}} (bab) + {{attrMod(character.attrs.str)}} (str) + {{character.offense.size}} (size)
-    </ul>
+    <div v-for="(val, key, index) in character.offense">
+      <label v-if="key == 'bab'">Base Attack Bonus: <input type="text" v-model="character.offense[key]" ></label>
+      <label v-if="key == 'size'">Size Bonus: <input type="text" v-model="character.offense[key]" ></label>
+    </div>
+    <div  v-for="(val, attack, index) in character.attacks">
+      <calcabledisplay :name="attack" :character="character" v-model="val"></calcabledisplay>
+    </div>
+    
+    
+    
+   
   </div>
   <div>
     <h4>Defense</h4>
@@ -42,7 +47,7 @@
       <li>CMD</li>
     </ul>
     <div v-for="(val, save, index) in character.saves">
-      <calcabledisplay :name="save" :attrs="character.attrs" v-model="character.saves[save]"></calcabledisplay>
+      <calcabledisplay :name="save" :character="character" v-model="character.saves[save]"></calcabledisplay>
     </div>
   </div>
   <hr>
@@ -55,22 +60,25 @@
 
 
 const calcableDisplay = Vue.component('calcabledisplay', {
-  props: ['name', 'value', 'attrs'],
+  props: ['name', 'value', 'character'],
   computed: {
     total: function(){
       return this.calculateVal(this.value);
     }
   },
   methods: {
+    lookupVariable: function(keyArr){
+      let retVal = this.character;
+      for( let i = 0; i < keyArr.length; i++){
+        retVal = retVal[keyArr[i]]
+      }
+      return retVal;
+    },
     calculateVal: function(obj){
       let sum = 0
       for(const key in obj){
-        if(key == 'stat'){
-          let statNum = this.attrMod(this.attrs[obj[key]])
-          sum += statNum;
-        }else{
-          sum += Number.parseInt(obj[key])
-        }
+        statNum = this.showStatMod(obj[key]);
+        sum += Number.parseInt(statNum)
       }
       return sum;
     },
@@ -78,14 +86,27 @@ const calcableDisplay = Vue.component('calcabledisplay', {
       return Math.floor( (attr/2) ) - 5
     },
     showStatMod: function(val){
-      if( this.attrs[val] ) {
-        return this.attrMod(this.attrs[val])
+      if( typeof val == 'string' && val.indexOf('$') == 0 ) {
+        let characterVariable = val.substr(1).split('.')
+        let statNum = this.lookupVariable(characterVariable);
+        if(characterVariable.includes('attrs')){
+          statNum = this.attrMod(statNum)
+        }
+        return statNum
       }
       return val;
+    },
+    updateModel: function(){
+      /*
+      var updatedCopy = Object.assign({}, this.value, {
+        text: Math.random().toFixed(3)
+      })
+      this.$emit('input', updatedCopy)
+      */
     }
   },
   template: `<span>
-    <label>{{name}}: {{total}} = <span v-for="(val, key, index) in value"> <i v-if="index > 0">+</i> {{showStatMod(val)}} ( <span v-if="key == 'stat'">{{val}}</span> <span v-if="key != 'stat'">{{key}}</span>) </span></label>
+    <label>{{name}}: {{total}} = <span v-for="(val, key, index) in value"> <i v-if="index > 0">+</i> <input v-if="(typeof val != 'string')" type="text" v-model="val" v-on:change="updateModel" > <span v-if="(typeof val == 'string' && val.indexOf('$') == 0)">{{showStatMod(val)}}</span> ({{key}}) </span></label>
   </span>`
 })
 
